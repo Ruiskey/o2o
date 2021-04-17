@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--
+        1. 另一种引入jdbc配置文件的方式：
+        把数据库的配置信息，写在一个独立的文件，编译修改数据库的配置内容
+        spring知道*.properties的位置
+    -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--声明数据源DataSource, 作用是连接数据库-->
+    <bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+        <!--配置连接池属性-->
+        <property name="driverClass" value="${jdbc.driver}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.user}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <!--c3p0连接池的私有属性-->
+        <property name="maxPoolSize" value="30" />
+        <property name="minPoolSize" value="10" />
+
+        <!--关闭链接后不自动commit-->
+        <property name="autoCommitOnClose" value="false" />
+        <!--获取链接超时时间-->
+        <property name="checkoutTimeout" value="10000" />
+        <!--当获取连接失败重试次数-->
+        <property name="acquireRetryAttempts" value="2" />
+
+    </bean>
+
+    <!--3. 声明的是mybatis中提供的SqlSessionFactoryBean类，这个类内容创建SqlSessionFactory的-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--set注入，把数据库连接池子付给了dataSource属性-->
+        <property name="dataSource" ref="myDataSource" />
+        <!--mybatis主配置文件的位置
+            configLocation属性是Resource类型，读取配置文件
+            它的赋值使用value,指定文件的路径，使用classpath:表示文件的位置
+        -->
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+    </bean>
+
+    <!--
+        4. 创建dao对象，使用SqlSession的getMapper (StudentDao.class)
+        MapperScannerConfigurer: 在内部调用getMapper()生成每个dao接口的代理对象
+    -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--指定SqlSessionFactory对象的id-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <!--
+            指定包名，包名是dao接口所在的包
+            MapperScannerConfigurer会扫描这个包中所有的接口，把每个接口都执行一次getMapper()方法，得到每个接口的dao对象
+            创建好的dao对象放入到spring的容器中
+        -->
+        <property name="basePackage" value="com.bjpowernode.dao" />
+    </bean>
+
+    <!--扫描service包下的注解类型-->
+    <context:component-scan base-package="com.bjpowernode.service" />
+
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入数据库链接池-->
+        <property name="dataSource" ref="myDataSource" />
+    </bean>
+
+    <!--配置基于注解的声明式事务-->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>

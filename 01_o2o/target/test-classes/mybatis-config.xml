@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--settings: 控制mybatis全局行为-->
+    <settings>
+        <!--使用jdbc的getGeneratedKeys获取数据库自增主键值-->
+        <setting name="useGeneratedKeys" value="true"/>
+
+        <!--使用列别名替换列名 默认为true-->
+        <setting name="useColumnLabel" value="true"/>
+
+        <!--开启陀峰命名转换：Table{create_time}  -> Entiry{create_Time}-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+        <!--设置mybatis输出日志-->
+        <!--<setting name="logImpl" value="STDOUT_LOGGING"/>-->
+    </settings>
+
+
+    <!--设置别名-->
+    <typeAliases>
+        <!--name:实体类所在的包名-->
+        <package name="com.bjpowernode.entity"/>
+    </typeAliases>
+
+    <!--sql mapper (sql映射文件的位置)-->
+    <mappers>
+        <!--
+            name:是包名，这个包中的所有mapper.xml一次都能加载
+        -->
+        <package name="com.bjpowernode.dao"/>
+    </mappers>
+</configuration>

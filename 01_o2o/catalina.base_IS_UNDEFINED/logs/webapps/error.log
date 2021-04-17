@@ -1,0 +1,5 @@
+2021-04-16 20:35:50.856 [main] ERROR com.bjpowernode.util.ImageUtil - javax.imageio.IIOException: Can't read input file!
+2021-04-16 20:36:37.875 [main] ERROR com.bjpowernode.util.ImageUtil - javax.imageio.IIOException: Can't read input file!
+2021-04-16 20:37:02.272 [main] ERROR com.bjpowernode.util.ImageUtil - javax.imageio.IIOException: Can't read input file!
+2021-04-16 20:38:45.798 [main] ERROR com.bjpowernode.util.ImageUtil - java.io.FileNotFoundException: /home/rei/o2o/images/upload/item/shop/6/2021041620384593784.png (没有那个文件或目录)
+2021-04-16 20:40:59.868 [main] ERROR com.bjpowernode.util.ImageUtil - java.io.FileNotFoundException: /home/rei/o2o/images/upload/item/shop/7/2021041620405913801.png (没有那个文件或目录)
